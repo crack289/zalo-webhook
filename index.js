@@ -1,26 +1,24 @@
 const express = require("express");
 const axios = require("axios");
-const app = express();
 
+const app = express();
 app.use(express.json());
 
-// 🔑 DÁN ACCESS TOKEN OA CỦA BẠN VÀO ĐÂY
-const ZALO_OA_ACCESS_TOKEN = process.env.ZALO_OA_ACCESS_TOKEN;
+// ⚠️ CÁCH NHANH: token viết thẳng để test
+const ZALO_OA_ACCESS_TOKEN = "TOKEN_THẬT_CỦA_BẠN";
 
-// Webhook Zalo
 app.post("/zalo/webhook", async (req, res) => {
+    console.log("Zalo gửi về:", JSON.stringify(req.body, null, 2));
+
     try {
-        console.log("Zalo gửi về:", JSON.stringify(req.body, null, 2));
-
         if (req.body.event_name === "message.text.received") {
-            const userId = req.body.message.chat.id;
-            const userMessage = req.body.message.text;
+            const userId = req.body.message.from.id;
+            const userText = req.body.message.text;
 
-            const replyText = `🤖 Bot đã nhận: "${userMessage}"`;
+            const replyText = `🤖 Bot đã nhận: "${userText}"`;
 
-            // ✅ GỬI access_token QUA QUERY STRING
             await axios.post(
-                `https://openapi.zalo.me/v3.0/oa/message/cs?access_token=3825177517802329444:cimmUnNnISwrIQIpFRXNvdcYjUILnJfgfBLVyFLuqFszmGAVEczrNXcxaWkeapar`,
+                `https://openapi.zalo.me/v3.0/oa/message/cs?access_token=${ZALO_OA_ACCESS_TOKEN}`,
                 {
                     recipient: {
                         user_id: userId
@@ -35,28 +33,23 @@ app.post("/zalo/webhook", async (req, res) => {
                     }
                 }
             );
+
+            console.log("✅ Đã gửi reply cho user:", userId);
         }
-
-        res.status(200).send("OK");
     } catch (err) {
-        console.error(
-          "Send message error:",
-          err.response?.data || err.message
-        );
-        res.status(200).send("ERROR");
+        console.error("❌ Lỗi gửi tin:", err.response?.data || err.message);
     }
+
+    // ⚠️ BẮT BUỘC trả 200 cho Zalo
+    res.status(200).send("OK");
 });
-
-
 
 // Route test
 app.get("/", (req, res) => {
     res.send("Zalo Webhook Running");
 });
 
-// Render PORT
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("Server running on port", PORT);
 });
-
