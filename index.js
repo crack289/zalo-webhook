@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // 🔑 DÁN ACCESS TOKEN OA CỦA BẠN VÀO ĐÂY
-const ZALO_OA_ACCESS_TOKEN = "3825177517802329444:cimmUnNnISwrIQIpFRXNvdcYjUILnJfgfBLVyFLuqFszmGAVEczrNXcxaWkeapar";
+const ZALO_OA_ACCESS_TOKEN = process.env.ZALO_OA_ACCESS_TOKEN;
 
 // Webhook Zalo
 app.post("/zalo/webhook", async (req, res) => {
