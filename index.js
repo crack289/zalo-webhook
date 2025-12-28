@@ -12,17 +12,15 @@ app.post("/zalo/webhook", async (req, res) => {
     try {
         console.log("Zalo gửi về:", JSON.stringify(req.body, null, 2));
 
-        const event = req.body.event_name;
-
-        // ✅ ĐÚNG EVENT NAME THEO LOG
-        if (event === "message.text.received") {
-            const userId = req.body.message.from.id;
+        if (req.body.event_name === "message.text.received") {
+            const userId = req.body.message.chat.id;
             const userMessage = req.body.message.text;
 
             const replyText = `🤖 Bot đã nhận: "${userMessage}"`;
 
+            // ✅ GỬI access_token QUA QUERY STRING
             await axios.post(
-                "https://openapi.zalo.me/v3.0/oa/message/cs",
+                `https://openapi.zalo.me/v3.0/oa/message/cs?access_token=${ZALO_OA_ACCESS_TOKEN}`,
                 {
                     recipient: {
                         user_id: userId
@@ -33,7 +31,6 @@ app.post("/zalo/webhook", async (req, res) => {
                 },
                 {
                     headers: {
-                        "access_token": ZALO_OA_ACCESS_TOKEN,
                         "Content-Type": "application/json"
                     }
                 }
@@ -42,10 +39,14 @@ app.post("/zalo/webhook", async (req, res) => {
 
         res.status(200).send("OK");
     } catch (err) {
-        console.error("Webhook error:", err.response?.data || err.message);
+        console.error(
+          "Send message error:",
+          err.response?.data || err.message
+        );
         res.status(200).send("ERROR");
     }
 });
+
 
 
 // Route test
