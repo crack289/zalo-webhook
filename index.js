@@ -20,7 +20,7 @@ app.post("/zalo/webhook", async (req, res) => {
 
             // ✅ GỬI access_token QUA QUERY STRING
             await axios.post(
-                `https://openapi.zalo.me/v3.0/oa/message/cs?access_token=${3825177517802329444:cimmUnNnISwrIQIpFRXNvdcYjUILnJfgfBLVyFLuqFszmGAVEczrNXcxaWkeapar}`,
+                `https://openapi.zalo.me/v3.0/oa/message/cs?access_token=3825177517802329444:cimmUnNnISwrIQIpFRXNvdcYjUILnJfgfBLVyFLuqFszmGAVEczrNXcxaWkeapar`,
                 {
                     recipient: {
                         user_id: userId
