@@ -14,15 +14,13 @@ app.post("/zalo/webhook", async (req, res) => {
 
         const event = req.body.event_name;
 
-        // Chỉ xử lý khi user gửi tin nhắn text
-        if (event === "user_send_text") {
-            const userId = req.body.sender.id;
+        // ✅ ĐÚNG EVENT NAME THEO LOG
+        if (event === "message.text.received") {
+            const userId = req.body.message.from.id;
             const userMessage = req.body.message.text;
 
-            // Nội dung trả lời
             const replyText = `🤖 Bot đã nhận: "${userMessage}"`;
 
-            // 🔥 GỌI API ZALO GỬI TIN NHẮN
             await axios.post(
                 "https://openapi.zalo.me/v3.0/oa/message/cs",
                 {
@@ -48,6 +46,7 @@ app.post("/zalo/webhook", async (req, res) => {
         res.status(200).send("ERROR");
     }
 });
+
 
 // Route test
 app.get("/", (req, res) => {
