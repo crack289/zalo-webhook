@@ -4,8 +4,7 @@ const axios = require("axios");
 const app = express();
 app.use(express.json());
 
-// ⚠️ CÁCH NHANH: token viết thẳng để test
-const ZALO_OA_ACCESS_TOKEN = "TOKEN_THẬT_CỦA_BẠN";
+const ZALO_OA_ACCESS_TOKEN = "3825177517802329444:cimmUnNnISwrIQIpFRXNvdcYjUILnJfgfBLVyFLuqFszmGAVEczrNXcxaWkeapar";
 
 app.post("/zalo/webhook", async (req, res) => {
     console.log("Zalo gửi về:", JSON.stringify(req.body, null, 2));
